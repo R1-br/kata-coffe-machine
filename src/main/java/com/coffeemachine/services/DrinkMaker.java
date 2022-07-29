@@ -1,4 +1,9 @@
-package com.coffeemachine;
+package com.coffeemachine.services;
+
+import com.coffeemachine.mapper.OrderMapper;
+import com.coffeemachine.validator.OrderValidator;
+import com.coffeemachine.exceptions.CoffeeMachineException;
+import com.coffeemachine.model.Order;
 
 public class DrinkMaker {
 
@@ -11,14 +16,17 @@ public class DrinkMaker {
 
             switch (order.getDrinkType()) {
                 case COFFEE:
-                    response = response.concat(" coffee with");
+                    response = response.concat((order.isExtraHot() ? "n extra hot" : "") + " coffee with");
                     break;
                 case TEA:
-                    response = response.concat(" tea with");
+                    response = response.concat((order.isExtraHot() ? "n extra hot" : "") + " tea with");
                     break;
                 case CHOCOLATE:
-                    response = response.concat(" chocolate with");
+                    response = response.concat((order.isExtraHot() ? "n extra hot" : "") + " chocolate with");
                     break;
+                case ORANGE_JUICE:
+                    response = response.concat("n orange juice.");
+                    return response;
                 default:
             }
 
@@ -27,6 +35,7 @@ public class DrinkMaker {
             } else {
                 response = response.concat(" " + order.getSugar().toString() + " sugar" + ((order.getSugar() == 1) ? " " : "s ") + "and a stick.");
             }
+
             return (response);
         } catch (CoffeeMachineException e) {
             throw e;

@@ -1,6 +1,11 @@
-package com.coffeemachine;
+package com.coffeemachine.mapper;
 
-import java.util.List;
+import com.coffeemachine.validator.PriceChecker;
+import com.coffeemachine.enums.DrinkTypeEnum;
+import com.coffeemachine.exceptions.CoffeeMachineException;
+import com.coffeemachine.exceptions.MissingMoneyException;
+import com.coffeemachine.model.Globals;
+import com.coffeemachine.model.Order;
 
 public class OrderMapper {
 
@@ -11,19 +16,28 @@ public class OrderMapper {
         switch (order.getDrinkType()) {
             case COFFEE:
                 price = Globals.COFFEE_PRICE;
-                orderAsString = Globals.COFFEE_CODE + ":";
+                orderAsString = String.valueOf(Globals.COFFEE_CODE);
                 break;
             case TEA:
                 price = Globals.TEA_PRICE;
-                orderAsString = Globals.TEA_CODE + ":";
+                orderAsString = String.valueOf(Globals.TEA_CODE);
                 break;
             case CHOCOLATE:
                 price = Globals.CHOCOLATE_PRICE;
-                orderAsString = Globals.CHOCOLATE_CODE + ":";
+                orderAsString = String.valueOf(Globals.CHOCOLATE_CODE);
+                break;
+            case ORANGE_JUICE:
+                price = Globals.ORANGE_JUICE_PRICE;
+                orderAsString = String.valueOf(Globals.ORANGE_JUICE_CODE);
                 break;
             default:
                 throw new CoffeeMachineException("Error: Invalid Drink Type");
         }
+
+        if (order.isExtraHot() && order.getDrinkType() != DrinkTypeEnum.ORANGE_JUICE) {
+            orderAsString = orderAsString.concat("h");
+        }
+        orderAsString = orderAsString.concat(":");
 
         if (!PriceChecker.checkPrice(order.getPaidAmount(), price)) {
             throw new MissingMoneyException("Missing " + (Globals.COFFEE_PRICE - order.getPaidAmount()) +  " cents.");
@@ -52,10 +66,18 @@ public class OrderMapper {
             case Globals.CHOCOLATE_CODE:
                 order.setDrinkType(DrinkTypeEnum.CHOCOLATE);
                 break;
+            case Globals.ORANGE_JUICE_CODE:
+                order.setDrinkType(DrinkTypeEnum.ORANGE_JUICE);
+                break;
             default:
                 throw new CoffeeMachineException("Error: Invalid Drink Code.");
         }
 
+        if (order.getDrinkType() != DrinkTypeEnum.ORANGE_JUICE
+                && orderAsArray[0].length() > 1
+                && orderAsArray[0].charAt(1) == 'h') {
+            order.setExtraHot(true);
+        }
         if (orderAsArray.length == 1) {
             order.setSugar(0);
         } else {

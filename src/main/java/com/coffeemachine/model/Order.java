@@ -1,9 +1,12 @@
-package com.coffeemachine;
+package com.coffeemachine.model;
+
+import com.coffeemachine.enums.DrinkTypeEnum;
 
 public class Order {
     private DrinkTypeEnum drinkType;
     private Integer sugar;
     private Integer paidAmount;
+    private boolean extraHot = false;
 
     public Order() {}
 
@@ -45,4 +48,12 @@ public class Order {
     public void setPaidAmount(Integer paidAmount) {
         this.paidAmount = paidAmount;
     }
+
+    public boolean isExtraHot() {
+        return extraHot;
+    }
+    public void setExtraHot(boolean extraHot) {
+        this.extraHot = extraHot;
+    }
+
 }

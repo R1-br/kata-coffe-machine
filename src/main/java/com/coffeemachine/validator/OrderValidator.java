@@ -1,6 +1,7 @@
-package com.coffeemachine;
+package com.coffeemachine.validator;
 
-import java.util.Arrays;
+import com.coffeemachine.exceptions.CoffeeMachineException;
+import com.coffeemachine.model.Order;
 
 public class OrderValidator {
 

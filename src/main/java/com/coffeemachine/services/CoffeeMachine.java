@@ -1,8 +1,10 @@
-package com.coffeemachine;
+package com.coffeemachine.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.coffeemachine.mapper.OrderMapper;
+import com.coffeemachine.validator.OrderValidator;
+import com.coffeemachine.exceptions.CoffeeMachineException;
+import com.coffeemachine.exceptions.MissingMoneyException;
+import com.coffeemachine.model.Order;
 
 public class CoffeeMachine {
 

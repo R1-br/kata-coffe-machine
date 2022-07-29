@@ -1,4 +1,4 @@
-package com.coffeemachine;
+package com.coffeemachine.validator;
 
 public class PriceChecker {
 
