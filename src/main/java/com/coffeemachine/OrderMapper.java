@@ -4,21 +4,29 @@ import java.util.List;
 
 public class OrderMapper {
 
-    static public String mapOrderToString(Order order) throws CoffeeMachineException {
+    static public String mapOrderToString(Order order) throws CoffeeMachineException, MissingMoneyException {
         String orderAsString = new String();
+        Integer price = 0;
 
         switch (order.getDrinkType()) {
             case COFFEE:
+                price = Globals.COFFEE_PRICE;
                 orderAsString = Globals.COFFEE_CODE + ":";
                 break;
             case TEA:
+                price = Globals.TEA_PRICE;
                 orderAsString = Globals.TEA_CODE + ":";
                 break;
             case CHOCOLATE:
+                price = Globals.CHOCOLATE_PRICE;
                 orderAsString = Globals.CHOCOLATE_CODE + ":";
                 break;
             default:
                 throw new CoffeeMachineException("Error: Invalid Drink Type");
+        }
+
+        if (!PriceChecker.checkPrice(order.getPaidAmount(), price)) {
+            throw new MissingMoneyException("Missing " + (Globals.COFFEE_PRICE - order.getPaidAmount()) +  " cents.");
         }
 
         if (order.getSugar() != null && order.getSugar() > 0) {

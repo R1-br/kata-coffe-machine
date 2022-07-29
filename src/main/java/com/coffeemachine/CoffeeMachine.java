@@ -22,6 +22,8 @@ public class CoffeeMachine {
             return drinkMaker.makeDrink(orderAsString);
         } catch (CoffeeMachineException e) {
             return ("M: There Was an error serving your drink: " + e.getMessage());
+        } catch (MissingMoneyException e) {
+            return ("M: " + e.getMessage());
         }
     }
 }

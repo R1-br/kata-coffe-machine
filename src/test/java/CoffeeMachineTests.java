@@ -1,5 +1,6 @@
 import com.coffeemachine.CoffeeMachine;
 import com.coffeemachine.DrinkTypeEnum;
+import com.coffeemachine.Globals;
 import com.coffeemachine.Order;
 import org.junit.Test;
 
@@ -16,6 +17,8 @@ public class CoffeeMachineTests {
     private static final String expectedNoSugarString = "M: Preparing a chocolate without sugar.";
     private static final String expectedOneSugarString = "M: Preparing a tea with 1 sugar and a stick.";
     private static final String expectedTwoSugarString = "M: Preparing a coffee with 2 sugars and a stick.";
+    private static final String expectedNullOrZeroOrNegativePriceString = "M: There Was an error serving your drink: Error: You must pay in order to have a drink.";
+    private static final String expectedMissingMoneyString = "M: Missing 30 cents.";
     @Test
     public void testNullOrder() {
         Order order = null;
@@ -57,6 +60,7 @@ public class CoffeeMachineTests {
     public void testOrderNoSugar() {
         Order order = new Order(DrinkTypeEnum.CHOCOLATE);
 
+        order.setPaidAmount(Globals.CHOCOLATE_PRICE);
         String result = coffeeMachine.takeOrder(order);
 
         assertEquals(expectedNoSugarString, result);
@@ -66,6 +70,7 @@ public class CoffeeMachineTests {
     public void testOrderOneSugar() {
         Order order = new Order(DrinkTypeEnum.TEA, 1);
 
+        order.setPaidAmount(Globals.TEA_PRICE);
         String result = coffeeMachine.takeOrder(order);
         assertEquals(expectedOneSugarString, result);
     }
@@ -74,8 +79,45 @@ public class CoffeeMachineTests {
     public void testOrderTwoSugars() {
         Order order = new Order(DrinkTypeEnum.COFFEE, 2);
 
+        order.setPaidAmount(Globals.COFFEE_PRICE);
         String result = coffeeMachine.takeOrder(order);
 
         assertEquals(expectedTwoSugarString, result);
+    }
+
+    @Test
+    public void testNullOrZeroOrNegativePrice() {
+        Order order = new Order(DrinkTypeEnum.COFFEE, 2);
+
+        String result = coffeeMachine.takeOrder(order);
+        assertEquals(expectedNullOrZeroOrNegativePriceString, result);
+
+        order.setPaidAmount(0);
+        result = coffeeMachine.takeOrder(order);
+        assertEquals(expectedNullOrZeroOrNegativePriceString, result);
+
+        order.setPaidAmount(-2);
+        result = coffeeMachine.takeOrder(order);
+        assertEquals(expectedNullOrZeroOrNegativePriceString, result);
+    }
+
+    @Test
+    public void testOrderMissingMoney() {
+        Order order = new Order(DrinkTypeEnum.COFFEE, 0, 30);
+
+        String result = coffeeMachine.takeOrder(order);
+
+        assertEquals(expectedMissingMoneyString, result);
+    }
+
+    @Test
+    public void testOrderTooMuchMoney() {
+        Order order = new Order(DrinkTypeEnum.CHOCOLATE);
+
+        order.setPaidAmount(127);
+
+        String result = coffeeMachine.takeOrder(order);
+
+        assertEquals(expectedNoSugarString, result);
     }
 }

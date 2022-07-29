@@ -18,6 +18,10 @@ public class OrderValidator {
                 throw new CoffeeMachineException("Error: You can only have 0, 1 or 2 sugar(s).");
             }
         }
+
+        if (order.getPaidAmount() == null || order.getPaidAmount() <= 0) {
+            throw  new CoffeeMachineException("Error: You must pay in order to have a drink.");
+        }
     }
 
     static public void validateStringOrder(String orderAsString) throws CoffeeMachineException {
